@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		.box{
+			width: 1200px;
+			height: 383px;
+			margin:20px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		.slider{
+			width: 8400px;
+			position: absolute;
+			left: -1200px;
+		}
+		.slide{
+			width: 1200px;
+			overflow:hidden;
+			float: left;
+		}
+		.box>span{
+			display: block;
+			width: 30px;
+			height: 50px;
+			text-align: center;
+			cursor: pointer;
+			color: white;
+			top: 175px;
+			line-height: 50px;
+			background: rgb(255,0,0);
+			font-size: 30px;
+			position: absolute;
+			opacity: 0;
+		}
+		#left{
+			left: 30px;
+		}
+		#right{
+			right: 30px;
+		}
+		.nav>li{
+			text-align: center;
+			list-style-type: none;
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: #ccc;
+			cursor: pointer;
+			margin: 0 10px;
+			border-radius: 50%;
+			margin-top: 340px;
+		}
+		.nav .active{
+			background: rgb(255,0,0);
+		}
+		.nav{
+			position: absolute;
+			left: 525px;
+			bottom: 20px;
+		}
+		.t{
+			margin: 0 auto;
+			width: all;
+			height: 30px;
+			background-color: #ccc;
+		}
+		.top{
+			width: 1000px;
+			height: 30px;
+			line-height: 30px;
+			position: absolute;
+			left: 280px;
+			overflow: hidden;
+			display: inline-block;
+		}
+		.txt{
+			color: red;
+			width: 500px;
+		}
+		.a15{
+			position: absolute;
+			left: 260px;
+			top:7px;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="t" id="t">
+		<img class="a15" src="images/a15.png">
+		<div class="top" id="top">
+			<div class="txt" id="txt" style="margin-left: 1000px">
+			[温馨提示]最近有不少不法分子在网上骗人，请大家注意！！！
+			</div>
+		</div>
+	</div>
+	<div class="box" id="box">
+		<div class="slider" id="slider">
+			<div class="slide"><img src="images/b5.png"></div>
+			<div class="slide"><img src="images/b1.png"></div>
+			<div class="slide"><img src="images/b2.png"></div>
+			<div class="slide"><img src="images/b3.png"></div>
+			<div class="slide"><img src="images/b4.png"></div>
+			<div class="slide"><img src="images/b5.png"></div>
+			<div class="slide"><img src="images/b1.png"></div>
+		</div>
+		<span id="left"><</span>
+		<span id="right">></span>
+		<ul class="nav" id="nav">
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+		</ul>
+	</div>
+</body>
+<script src="./animate.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var box = document.getElementById("box");
+	var list = document.getElementById("nav").children;
+	var slider = document.getElementById("slider");
+	var left = document.getElementById("left");
+	var right = document.getElementById("right");
+	var top = document.getElementById("top");
+	var txt = document.getElementsByClassName("txt")[0];
+	var index = 1;
+	var timer;
+	var ing = false;
+	var intervalId;
+	box.onmouseover = function(){
+		animate(left,{opacity:50})
+		animate(right,{opacity:50})
+		animate(list[0])
+		animate(list[1])
+		animate(list[2])
+		animate(list[3])
+		animate(list[4])
+		clearInterval(timer)
+	}
+	box.onmouseout = function(){
+		animate(left,{opacity:0})
+		animate(right,{opacity:0})
+		animate(list[0])
+		animate(list[1])
+		animate(list[2])
+		animate(list[3])
+		animate(list[4])
+		timer = setInterval(rightMoving,3000);
+	}
+
+	for(var i=0;i<list.length;i++){
+		list[i].index = i;
+		list[i].onclick = function(){
+			index = this.index + 1;
+			navmove();
+			animate(slider,{left:-1200*index});
+		}
+	}
+	function rightMoving(){
+		if(ing){
+			return;
+		}
+		ing = true;
+		index++
+		navmove();
+		animate(slider,{left:-1200*index},function(){
+			if(index==6){
+				slider.style.left = "-1200px";
+				index = 1;
+			}
+			ing = false;
+		});
+	}
+	function leftMoving(){
+		if(ing){
+			return;
+		}
+		ing=true;
+		index--;
+		navmove();
+		animate(slider,{left:-1200*index},function(){
+			if(index==0){
+				slider.style.left="-6000px";
+				index=5;
+			}
+			ing = false;
+		});
+	}
+	function navmove(){
+		for(var i=0;i<list.length;i++){
+			list[i].className = "";
+		}
+		if(index>5){
+			list[0].className = "active";
+		}else if(index<=0){
+			list[4].className = "active";
+		}else{
+			list[index-1].className = "active";
+		}
+	}
+	function txtmove(){
+		if(parseInt(txt.style.marginLeft)==-450){
+			txt.style.marginLeft = 1000 + "px";
+			return;
+		}
+		txt.style.marginLeft = (parseInt(txt.style.marginLeft)-5)+"px";
+	}
+	timer = setInterval(rightMoving,3000);
+	intervalId = setInterval(txtmove,80);
+	right.onclick = rightMoving;
+	left.onclick = leftMoving;
+</script>
+</html>
